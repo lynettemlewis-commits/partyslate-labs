@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Extend Your PartySlate Partnership | PartySlate Pro</title>
+<meta name="description" content="For group and enterprise partners, PartySlate can bring together our audience, industry relationships, content channels, events, and marketing programs to help you increase visibility, reach the right planners, and drive more qualified business." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #000000;
+    --paper: #ffffff;
+    --gray-text: #4a4a4a;
+    --gray-muted: #767676;
+    --line: #d6d6d6;
+    --gold: #b69853;
+    --rose: #b3446c;
+    --sans: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  img { max-width: 100%; display: block; }
+
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 48px; }
+  @media (max-width: 720px) { .container { padding: 0 24px; } }
+
+  /* ---------- header ---------- */
+  header.top {
+    border-bottom: 1px solid var(--line);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  @media (max-width: 720px) { header.top { padding: 16px 24px; } }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-svg { height: 20px; width: auto; color: var(--ink); }
+  header.top a.back {
+    font-size: 12px; font-weight: 500; letter-spacing: .05em; color: var(--gray-muted);
+    text-decoration: none;
+  }
+  header.top a.back:hover { color: var(--ink); }
+
+  /* ---------- hero ---------- */
+  .hero { padding-top: 88px; padding-bottom: 56px; }
+  @media (max-width: 720px) { .hero { padding-top: 56px; padding-bottom: 40px; } }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 20px;
+  }
+  .hero h1 {
+    margin: 0; font-size: 64px; line-height: 1.02; font-weight: 700; letter-spacing: -0.025em;
+    max-width: 18ch; text-wrap: balance;
+  }
+  @media (max-width: 900px) { .hero h1 { font-size: 44px; } }
+  @media (max-width: 560px) { .hero h1 { font-size: 34px; } }
+  .hero p.lede {
+    margin: 28px 0 0; font-size: 19px; line-height: 1.55; font-weight: 300; max-width: 62ch; text-wrap: pretty;
+  }
+
+  /* ---------- program sections ---------- */
+  .sections { padding-bottom: 120px; }
+  .program-section {
+    margin-top: 96px;
+  }
+  .program-section:first-child { margin-top: 0; }
+  .program-section .kicker {
+    font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 16px;
+  }
+  .program-section h2 {
+    margin: 0; font-size: 34px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em;
+    max-width: 32ch; text-wrap: balance;
+  }
+  @media (max-width: 560px) { .program-section h2 { font-size: 26px; } }
+  .program-section > p.intro {
+    margin: 20px 0 0; font-size: 16px; line-height: 1.6; font-weight: 300; color: var(--gray-text);
+    max-width: 62ch; text-wrap: pretty;
+  }
+
+  /* alternating media + text row, one per program with a visual */
+  .feature-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
+    padding: 48px 0; border-top: 1px solid var(--line);
+  }
+  .program-section .feature-row:first-of-type,
+  .program-section .feature-row:first-child { border-top: none; padding-top: 8px; }
+  @media (min-width: 861px) { .feature-row.reverse .feature-text { order: -1; } }
+  @media (max-width: 860px) { .feature-row { grid-template-columns: 1fr; gap: 24px; padding: 32px 0; } }
+  .feature-media img { width: 100%; display: block; }
+  .feature-text h3 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+  .feature-row.text-only { grid-template-columns: 1fr; }
+  .feature-row.text-only .feature-text { max-width: 62ch; }
+  .badge {
+    display: inline-block; margin-left: 10px; font-size: 10px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); border-radius: 20px;
+    padding: 3px 9px; vertical-align: middle;
+  }
+
+  /* full-width banner image at the top of a section */
+  .section-media { margin: 32px 0 40px; }
+  .section-media img { width: 100%; display: block; }
+
+  /* plain text cards for programs without a visual */
+  .programs { display: grid; gap: 40px; margin-top: 8px; }
+  .programs.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .programs.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .programs.cols-1 { grid-template-columns: 1fr; max-width: 640px; }
+  @media (max-width: 960px) { .programs.cols-3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 860px) { .programs.cols-3, .programs.cols-2 { grid-template-columns: 1fr; } }
+  .program { border-top: 1px solid var(--line); padding-top: 20px; }
+  .program-media { margin-bottom: 20px; }
+  .program-media img { width: 100%; display: block; }
+  .program h3 { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+
+  .feature-text p, .program p { margin: 12px 0 0; font-size: 15px; line-height: 1.6; font-weight: 300; color: var(--gray-text); text-wrap: pretty; }
+  .feature-text .subhead, .program .subhead {
+    font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gray-muted); margin: 20px 0 10px;
+  }
+  .feature-text .chips, .program .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .feature-text .chip, .program .chip { font-size: 13px; font-weight: 400; padding: 7px 12px; border: 1px solid var(--line); }
+  .feature-text .steps, .program .steps { margin: 8px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.65; font-weight: 300; color: var(--gray-text); }
+  .feature-text .steps li, .program .steps li { margin-bottom: 6px; }
+  .feature-text .best-for, .program .best-for {
+    margin-top: 18px; font-size: 13px; font-weight: 300; color: var(--gray-muted); line-height: 1.5;
+  }
+  .feature-text .best-for strong, .program .best-for strong { color: var(--ink); font-weight: 500; }
+  .feature-text .note, .program .note { margin-top: 8px; font-size: 12px; font-style: italic; color: var(--gray-muted); }
+
+  /* ---------- closing / CTA ---------- */
+  .closing { background: var(--ink); color: var(--paper); padding: 96px 0; }
+  .closing .eyebrow { color: var(--gold); }
+  .closing p.intro {
+    margin: 20px 0 0; font-size: 16px; line-height: 1.6; font-weight: 300; color: var(--line);
+    max-width: 62ch; text-wrap: pretty;
+  }
+  .closing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 56px; margin-top: 48px; }
+  @media (max-width: 900px) { .closing-grid { grid-template-columns: 1fr 1fr; gap: 40px; } }
+  @media (max-width: 600px) { .closing-grid { grid-template-columns: 1fr; } }
+  .closing-col { border-top: 1px solid #4a4a4a; padding-top: 24px; }
+  .closing-col .title { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  .closing-col p { margin: 16px 0 0; font-size: 15px; line-height: 1.6; font-weight: 300; color: var(--line); max-width: 44ch; text-wrap: pretty; }
+
+  .cta-row { margin-top: 56px; }
+  .cta-note { font-size: 13px; font-weight: 300; color: var(--line); }
+
+  /* ---------- footer ---------- */
+  footer.bottom {
+    padding: 32px 48px; display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--ink); flex-wrap: wrap; gap: 16px;
+  }
+  @media (max-width: 720px) { footer.bottom { padding: 24px; } }
+  footer.bottom .brand-svg { height: 18px; }
+  footer.bottom .label {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray-muted);
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <img class="brand-svg" src="assets/marketing%20page/partyslate-logo-black%20(1).png" alt="PartySlate">
+  </div>
+</header>
+
+<section class="hero container">
+  <h1>Extend Your PartySlate Partnership</h1>
+  <p class="lede">Your PartySlate partnership goes beyond profiles and inquiries, with opportunities to reach more event hosts, connect with event professionals, and build industry visibility.</p>
+</section>
+
+<section class="sections container">
+
+  <div class="program-section">
+    <div class="kicker">Reach More Event Hosts</div>
+    <h2>Put your venues and events in front of people who are actively planning.</h2>
+
+    <div class="programs cols-3">
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/Consumer%20Social%20Features.png" alt="PartySlate consumer social feature: Corporate Activations We Love"></div>
+        <h3>Consumer Social Features</h3>
+        <p>Showcase your venues and events to PartySlate's consumer audience through editorial social opportunities.</p>
+        <div class="subhead">Opportunities may include</div>
+        <div class="chips">
+          <span class="chip">Venue spotlights</span>
+          <span class="chip">Real event features</span>
+        </div>
+        <p class="best-for"><strong>Best for:</strong> Brand awareness, venue discovery, new openings and priority markets.</p>
+      </div>
+
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/Consumer%20Newsletter%20Features.png" alt="PartySlate consumer newsletter feature mockups"></div>
+        <h3>Consumer Newsletter Features</h3>
+        <p>Reach people actively planning events through PartySlate's consumer email audience, featuring your venues alongside real events, seasonal inspiration, emerging trends, and other content designed to inspire their planning.</p>
+        <p class="best-for"><strong>Best for:</strong> Priority markets, seasonal pushes and increasing visibility with active event hosts.</p>
+      </div>
+
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/online%20advertising.png" alt="Hilton Chicago display ads shown across partner websites"></div>
+        <h3>Online Advertising <span class="badge">Coming soon</span></h3>
+        <p>Reach hyper-local, in-market consumers beyond PartySlate with digital advertising managed by our team.</p>
+        <p>PartySlate runs the campaigns for you. No artwork, campaign management or landing pages required. We point in-market clients directly to your PartySlate Profile, where they can explore your venue and inquire.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="program-section">
+    <div class="kicker">Connect With Event Professionals</div>
+    <h2>Build relationships with planners through curated events and experiences.</h2>
+
+    <div class="programs cols-3">
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/summit.png" alt="Guests networking and on stage at a PartySlate Summit"></div>
+        <h3>PartySlate Summits</h3>
+        <p>Partner with PartySlate on one of our flagship industry events. PartySlate Summits bring together approximately 250 event professionals for education, networking and immersive event experiences.</p>
+        <div class="subhead">Partners may collaborate with PartySlate on</div>
+        <div class="chips">
+          <span class="chip">Venue</span>
+          <span class="chip">Catering</span>
+          <span class="chip">Event theme and experience</span>
+          <span class="chip">Planner and industry engagement</span>
+        </div>
+      </div>
+
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/sponsorship.png" alt="PartySlate media sponsorship at an industry event"></div>
+        <h3>Media Sponsorships</h3>
+        <p>Already hosting a showcase, opening or industry event? PartySlate can help you get the right people in the room.</p>
+        <div class="subhead">How it works</div>
+        <ol class="steps">
+          <li>Share your event details and target audience with PartySlate.</li>
+          <li>We curate a relevant list of industry professionals in markets where we have strong reach.</li>
+          <li>PartySlate promotes the event and invites selected contacts on your behalf.</li>
+        </ol>
+      </div>
+
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/bespoke.png" alt="An intimate bespoke planner experience hosted by PartySlate"></div>
+        <h3>Bespoke Planner Experiences</h3>
+        <p>Build deeper relationships with the planners who matter most through an intimate experience created specifically for your brand and goals.</p>
+        <p>PartySlate works directly with you to curate a small group of high-impact planners and develop a memorable experience around your market, venues and goals.</p>
+        <p class="best-for"><strong>Best for:</strong> Strategic markets, venue portfolios and customers looking to build deeper relationships with a select group of high-value planners.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="program-section">
+    <div class="kicker">Build Industry Visibility</div>
+    <h2>Showcase your brand and expertise across PartySlate's industry channels</h2>
+
+    <div class="programs cols-3">
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/pro%20IG.png" alt="PartySlate Pro social post recognizing a top industry event"></div>
+        <h3>PartySlate Pro Social</h3>
+        <p>Stay visible with planners and event professionals through PartySlate's industry-focused social channels.</p>
+        <div class="subhead">Opportunities may include</div>
+        <div class="chips">
+          <span class="chip">Industry Event of the Week</span>
+          <span class="chip">Event promotion</span>
+          <span class="chip">Testimonial spotlights</span>
+          <span class="chip">Partnership announcements</span>
+        </div>
+      </div>
+
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/webinars.png" alt="PartySlate webinar programming for event professionals"></div>
+        <h3>Webinars</h3>
+        <p>Reach event professionals at scale through PartySlate's digital programming.</p>
+        <p>Join PartySlate for conversations around the topics, trends and ideas shaping the events industry.</p>
+        <p class="best-for"><strong>Best for:</strong> Thought leadership, broad industry reach and showcasing your team's expertise.</p>
+      </div>
+
+      <div class="program">
+        <div class="program-media"><img src="assets/marketing%20page/education.png" alt="PartySlate education and speaking programming for event professionals"></div>
+        <h3>Education &amp; Speaking</h3>
+        <p>Put your team's expertise on stage at PartySlate events and other in-person educational programming.</p>
+        <div class="subhead">Opportunities may include</div>
+        <div class="chips">
+          <span class="chip">Summit panels</span>
+          <span class="chip">Fireside conversations</span>
+        </div>
+        <p class="best-for"><strong>Best for:</strong> Building credibility, connecting with the industry in person and positioning your team as industry leaders.</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<section class="closing">
+  <div class="container">
+    <div class="eyebrow">Build the Right Mix for Your Goals</div>
+    <p class="intro">Not every opportunity makes sense for every partner or every market. Your PartySlate team can help identify the right combination based on what you want to accomplish.</p>
+    <div class="cta-row">
+      <span class="cta-note">Talk to your PartySlate representative about the opportunities available for your markets and partnership.</span>
+    </div>
+  </div>
+</section>
+
+<footer class="bottom">
+  <img class="brand-svg" src="assets/marketing%20page/partyslate-logo-black%20(1).png" alt="PartySlate">
+  <div class="label">Partnership Programs</div>
+</footer>
+
+</body>
+</html>
