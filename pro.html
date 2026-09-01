@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PartySlate Pro Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Montserrat', 'Gotham', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #111;
+  background: #fff;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Serif used for editorial display — mirrors the PARTY*SLATE* wordmark */
+.serif {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+/* PAGES — only one shown at a time */
+.page { display: none; }
+.page.active { display: block; }
+
+/* Typography */
+.display {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.display em, .display .italic {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.serif-mark {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+}
+
+/* Layout */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+@media (max-width: 768px) { .container { padding: 0 24px; } }
+
+/* Prototype banner + nav are wrapped together in .proto-header, which is
+   the thing that's actually sticky — see that rule near the Highlight
+   Updates styles below. */
+.nav {
+  background: #fff;
+  z-index: 100;
+  border-bottom: 1px solid #f0f0f0;
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  max-width: 1600px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.logo { display: flex; align-items: baseline; gap: 4px; cursor: pointer; }
+.logo-svg { height: 20px; width: auto; color: #111; }
+.logo-mark {
+  font-family: 'Montserrat', 'Gotham', -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.05em;
+}
+.logo-mark .slate {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin-left: 6px;
+}
+.logo-pro {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  border-top: 1px solid #111;
+  padding-top: 2px;
+  margin-left: 4px;
+}
+.nav-links {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+}
+.nav-links button {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+.nav-links button:hover { background: #f5f5f5; }
+.nav-links button.active { background: #f5f5f5; }
+.nav-actions { display: flex; gap: 12px; }
+
+.btn {
+  display: inline-block;
+  padding: 14px 28px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  border: 1px solid #111;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+  background: transparent;
+  color: #111;
+  font-family: inherit;
+}
+.btn-primary { background: #111; color: #fff; }
+.btn-primary:hover { background: #333; border-color: #333; }
+.btn-secondary:hover { background: #111; color: #fff; }
+
+/* Hero */
+.hero { padding: 120px 0 80px; text-align: center; }
+.hero h1 { font-size: clamp(48px, 7vw, 96px); margin-bottom: 32px; }
+.hero p.subtitle {
+  font-family: 'Montserrat', 'Gotham', -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  max-width: 580px;
+  margin: 0 auto 48px;
+  color: #444;
+  line-height: 1.55;
+}
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 80px;
+}
+
+/* Media slot — placeholder for screenshots/GIFs */
+.media-slot {
+  position: relative;
+  width: 100%;
+  background: #f5f5f5;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+.media-slot.aspect-16-9 { aspect-ratio: 16/9; min-height: 0; }
+.media-slot.aspect-4-3 { aspect-ratio: 4/3; min-height: 0; }
+.media-slot img, .media-slot video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.trusted-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 32px 56px;
+}
+.trusted-logos img { width: auto; opacity: 0.75; transition: opacity 0.2s ease; }
+.trusted-logos img:hover { opacity: 1; }
+.media-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f5f5 0%, #eaeaea 100%);
+  color: #999;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 32px;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+}
+.media-placeholder strong {
+  display: block;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #555;
+}
+.media-placeholder .placeholder-hint {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 12px;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  max-width: 400px;
+}
+.media-placeholder .slot-tag {
+  display: inline-block;
+  background: #111;
+  color: #fff;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+  letter-spacing: 0.15em;
+}
+
+/* Stats */
+.stats { padding: 0 0 80px; }
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+.stat-number {
+  font-family: 'Montserrat', 'Gotham', sans-serif;
+  font-weight: 600;
+  font-size: clamp(56px, 8vw, 96px);
+  line-height: 1;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-family: 'Montserrat', 'Gotham', -apple-system, sans-serif;
+  font-size: 16px;
+  color: #444;
+  max-width: 280px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Built for */
+.built-for { padding: 80px 0 0; text-align: center; }
+.built-for h2 { font-size: clamp(40px, 5vw, 64px); margin-bottom: 56px; }
+.audience-tabs {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.audience-tab {
+  padding: 16px 24px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #999;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s ease;
+}
+.audience-tab.active { color: #111; border-bottom-color: #111; }
+.audience-tab:hover { color: #111; }
+
+/* Full bleed */
+.full-bleed {
+  position: relative;
+  height: 80vh;
+  min-height: 600px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  background-color: #1a1a1a;
+}
+.full-bleed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+.full-bleed-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  padding: 0 24px;
+}
+.full-bleed h2 { font-size: clamp(40px, 5vw, 72px); margin-bottom: 32px; }
+.full-bleed p {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.photo-credit {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #888;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Two up */
+.two-up { padding: 100px 0; }
+.two-up-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+
+/* Homepage two-up cards: floating screenshots with rounded corners + shadow */
+.two-up .media-slot {
+  background: transparent;
+  padding: 0;
+  border-radius: 12px;
+  min-height: 0;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.04);
+}
+.two-up .media-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+  border-radius: 12px;
+  box-shadow: none;
+  display: block;
+}
+@media (max-width: 900px) {
+  .two-up-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+.feature-card h3 {
+  font-size: clamp(32px, 3vw, 48px);
+  margin-top: 32px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 24px;
+}
+.feature-list { list-style: none; }
+.feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #222;
+}
+.feature-list li::before {
+  content: '✓';
+  color: #111;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.feature-card .btn { margin-top: 32px; }
+
+/* Two-sided value proposition (homepage: Get Discovered / Sell Visually) */
+.value-props { padding: 60px 0; }
+.value-props-header { text-align: center; max-width: 720px; margin: 0 auto 64px; }
+.value-props-header h2 { font-size: clamp(36px, 4.5vw, 56px); }
+.value-props-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+@media (max-width: 900px) {
+  .value-props-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+.value-prop-card {
+  background: #fff;
+  border: 1px solid #d4d4d4;
+  border-radius: 16px;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.value-prop-card:hover {
+  border-color: #999;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+.value-prop-icon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 20px;
+}
+.value-prop-card.profile .value-prop-icon { color: #B69853; }
+.value-prop-card.photohub .value-prop-icon { color: #B3446C; }
+.value-prop-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.value-prop-card.profile .value-prop-eyebrow { color: #B69853; }
+.value-prop-card.photohub .value-prop-eyebrow { color: #B3446C; }
+.value-prop-card h3 { font-size: clamp(26px, 3vw, 34px); margin-bottom: 16px; }
+.value-prop-body {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 28px;
+}
+.value-prop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 32px;
+  flex: 1;
+}
+.value-prop-list li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  color: #222;
+  line-height: 1.5;
+}
+.value-prop-list svg { flex-shrink: 0; width: 18px; height: 18px; margin-top: 2px; }
+.value-prop-card.profile .value-prop-list svg { color: #B69853; }
+.value-prop-card.photohub .value-prop-list svg { color: #B3446C; }
+.value-prop-cta {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: gap 0.2s ease;
+}
+.value-prop-cta:hover { gap: 12px; }
+.value-prop-cta svg { width: 16px; height: 16px; }
+
+/* Compact capability cards (e.g. Photo Hub "Everything you need to sell visually") */
+.capability-section { padding: 100px 0 60px; }
+.capability-header { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+.capability-header h2 { font-size: clamp(32px, 4vw, 48px); }
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+@media (max-width: 900px) {
+  .capability-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+.capability-card {
+  background: #fff;
+  border: 1px solid #d4d4d4;
+  border-radius: 12px;
+  padding: 36px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.capability-card:hover {
+  border-color: #999;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+.capability-icon {
+  width: 28px;
+  height: 28px;
+  color: #B3446C;
+  margin-bottom: 20px;
+}
+.capability-card h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+.capability-card p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 20px;
+}
+.capability-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 20px;
+  border-top: 1px dashed #c8c8c8;
+}
+.capability-feature-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #555;
+  background: #f5f5f5;
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+
+/* Trusted */
+.trusted { padding: 100px 0 60px; text-align: center; }
+.trusted h2 { font-size: clamp(32px, 4vw, 48px); margin-bottom: 64px; }
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 48px;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .logo-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+}
+.logo-item {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  font-size: 22px;
+  color: #111;
+  text-align: center;
+  line-height: 1.2;
+}
+.logo-item.bold-sans {
+  font-family: 'Montserrat', 'Gotham', sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.logo-item.script {
+  font-family: 'Brush Script MT', cursive;
+  font-style: italic;
+  font-size: 28px;
+}
+.logo-item.serif-caps {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: normal;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+
+.logo-grid-img {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.logo-grid-img img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(20%);
+}
+
+/* Feature row */
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  min-height: 600px;
+}
+.feature-row.reverse .feature-text { order: 2; }
+.feature-row.reverse .feature-media { order: 1; }
+@media (max-width: 900px) {
+  .feature-row { grid-template-columns: 1fr; min-height: auto; }
+  .feature-row.reverse .feature-text,
+  .feature-row.reverse .feature-media { order: initial; }
+}
+.feature-text { padding: 80px; }
+@media (max-width: 768px) { .feature-text { padding: 56px 24px; } }
+.feature-text h2 { font-size: clamp(36px, 4vw, 56px); margin-bottom: 24px; }
+.feature-text p { font-size: 17px; line-height: 1.6; color: #333; max-width: 480px; }
+.feature-media {
+  height: 100%;
+  min-height: 500px;
+  background: #f5f5f5;
+  position: relative;
+  overflow: hidden;
+}
+.feature-media .media-slot {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+.feature-media .media-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* CTA */
+.cta-section { padding: 100px 0 100px; text-align: center; }
+.cta-section.after-features { padding-top: 160px; }
+.cta-section h2 {
+  font-size: clamp(48px, 6vw, 80px);
+  max-width: 1100px;
+  margin: 0 auto 32px;
+}
+.cta-section p {
+  font-size: 17px;
+  max-width: 480px;
+  margin: 0 auto 48px;
+  color: #333;
+}
+
+/* Footer */
+.footer { background: #111; color: #fff; padding: 80px 0 60px; }
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+@media (max-width: 900px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+@media (max-width: 600px) {
+  .footer-inner { grid-template-columns: 1fr; }
+}
+.footer-brand .logo-mark { color: #fff; font-size: 22px; margin-bottom: 24px; }
+.footer-logo-svg { height: 16px; width: auto; color: #fff; margin-bottom: 24px; }
+.footer-social { display: flex; gap: 16px; margin-top: 8px; }
+.footer-social a {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+}
+.footer h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #fff;
+}
+.footer ul { list-style: none; }
+.footer ul li { margin-bottom: 16px; }
+.footer ul a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 15px;
+}
+.footer ul a:hover { color: #fff; }
+.footer .copyright {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 24px;
+}
+
+/* Highlight Updates — veils sections/elements that are unchanged from the
+   live PartySlate Pro page under a translucent black overlay, so proposed
+   copy/imagery stands out. Toggled by #highlight-toggle (in the prototype
+   banner at the top of the page).
+   - .edit-unchanged: a section/element that's entirely unchanged. Gets one
+     overlay across its own box. Tag the node itself (not a shared ancestor)
+     so a proposed child never sits under a dimmed parent's overlay.
+   - .edit-mixed: a section containing BOTH unchanged and proposed content
+     (e.g. a hero with an unchanged headline but a proposed subtitle). Gets
+     ONE continuous overlay across the whole section — covering the
+     whitespace between its children too, so highlighting doesn't look like
+     scattered gray boxes with white gaps — and its .edit-proposed
+     descendant punches through as a bright window via z-index + its own
+     background.
+   - .edit-proposed: a section/element that's entirely new/proposed with no
+     unchanged sibling inside it (e.g. the whole Photo Hub tab, rewritten
+     top to bottom). Tagged directly rather than left untagged, so toggling
+     Highlight Updates gives a positive "yes, this was reviewed and is
+     proposed" signal instead of silently doing nothing to it.
+   Every section in the page is tagged one of the three ways above — nothing
+   is left unclassified. The overlay is pointer-events:none, so dimmed
+   controls (nav, buttons) stay clickable. */
+.edit-unchanged, .edit-mixed { position: relative; }
+.edit-unchanged::after, .edit-mixed::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 4px;
+  background: rgba(17, 17, 17, 0);
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+body.highlight-edits .edit-unchanged::after,
+body.highlight-edits .edit-mixed::after {
+  background: rgba(17, 17, 17, 0.78);
+}
+.edit-proposed {
+  position: relative;
+  z-index: 2;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+body.highlight-edits .edit-proposed {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 0 0 14px #fff;
+}
+
+/* .feature-text normally hugs its own content height and lets .feature-row's
+   align-items:center float it in the middle of a taller row — fine
+   normally, but it left a floating gray box with white above/below it when
+   dimmed. Stretch it to the full row height here (search presence, the only
+   feature-text tagged unchanged) so its overlay reads as one solid block
+   flush with the image beside it. */
+.feature-text.edit-unchanged {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Prototype banner + nav stick together as one unit; the button lives
+   inside the banner so it stays reachable at any scroll position. */
+.proto-header {
+  position: sticky;
+  top: 0;
+  z-index: 150;
+}
+.prototype-banner {
+  background: #1a1a1a;
+  color: #fff;
+}
+.prototype-banner-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 10px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+@media (max-width: 768px) { .prototype-banner-inner { padding: 10px 24px; } }
+.prototype-banner-text {
+  font-family: 'Montserrat', 'Gotham', -apple-system, sans-serif;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+.prototype-banner-text strong {
+  color: #fff;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.highlight-toggle {
+  flex-shrink: 0;
+  padding: 8px 18px;
+  font-family: 'Montserrat', 'Gotham', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.highlight-toggle:hover { border-color: #fff; background: rgba(255, 255, 255, 0.08); }
+.highlight-toggle.active { background: #fff; color: #111; border-color: #fff; }
+.highlight-toggle.active:hover { background: #f0f0f0; }
+</style>
+</head>
+<body>
+
+<div class="proto-header">
+  <!-- Prototype-only banner, not part of the PartySlate page itself. -->
+  <div class="prototype-banner">
+    <div class="prototype-banner-inner">
+      <p class="prototype-banner-text"><strong>PartySlate Pro Prototype</strong>This prototype shows the current experience with proposed copy and imagery updates applied — use Highlight Updates to dim unchanged content and focus on what's proposed.</p>
+      <button id="highlight-toggle" class="highlight-toggle" onclick="toggleHighlightEdits()" aria-pressed="false">Highlight updates</button>
+    </div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav edit-unchanged">
+  <div class="nav-inner">
+    <div class="logo" onclick="showPage('overview')">
+      <svg class="logo-svg" fill="none" viewBox="0 0 176 32" xmlns="http://www.w3.org/2000/svg" aria-label="PartySlate Pro"><path clip-rule="evenodd" d="M171.985 23.255c2.365 0 4.015 1.788 4.015 3.948v.022c0 2.16-1.672 3.97-4.037 3.97s-4.015-1.787-4.015-3.948v-.022c0-2.16 1.673-3.97 4.037-3.97Zm-.022 1.25c-1.529 0-2.596 1.207-2.596 2.698v.022c0 1.491 1.089 2.72 2.618 2.72s2.596-1.207 2.596-2.698v-.022c0-1.492-1.089-2.72-2.618-2.72Zm-16.155-1.118c1.804 0 2.926 1.02 2.926 2.566v.022c0 1.721-1.386 2.62-3.08 2.62h-1.529v2.469h-1.353v-7.677h3.036Zm-1.683 3.992h1.573c1.023 0 1.661-.57 1.661-1.371v-.023c0-.899-.649-1.37-1.661-1.37h-1.573v2.764Zm9.536-3.992c.968 0 1.727.285 2.222.767.407.417.638.988.638 1.657v.021c0 1.261-.759 2.018-1.826 2.325l2.079 2.907h-1.606l-1.892-2.676h-1.694v2.675h-1.353v-7.676h3.432Zm-2.079 3.805h1.98c.967 0 1.584-.504 1.584-1.283v-.022c0-.823-.594-1.272-1.595-1.272h-1.969v2.577Z" fill="currentColor" fill-rule="evenodd"></path><path d="M146.172 28.596H0v-1.28h146.172v1.28ZM96.014.034c.649 0 1.263.08 1.842.237.58.157 1.16.453 1.744.888l.601-.764h.875l-1.104 5.294h-.886a16.587 16.587 0 0 0-.169-1.787c-.091-.614-.245-1.124-.464-1.529a2.644 2.644 0 0 0-1.004-1.04c-.429-.251-1-.376-1.713-.376-.859 0-1.58.305-2.162.916a3.046 3.046 0 0 0-.872 2.175c0 .554.107 1.025.321 1.411.215.386.548.7 1 .938.48.256.983.475 1.511.659.527.184.999.376 1.413.579.837.404 1.49.892 1.96 1.46.469.57.703 1.268.703 2.092 0 .795-.167 1.538-.503 2.227a5.118 5.118 0 0 1-1.343 1.732 6.454 6.454 0 0 1-1.985 1.134c-.732.262-1.54.395-2.422.395-.896 0-1.682-.116-2.356-.344-.674-.229-1.218-.492-1.634-.792l-.623.82h-.875l1.071-5.464h.886c.036.653.122 1.264.257 1.834.135.569.355 1.082.66 1.539a3.17 3.17 0 0 0 1.19 1.096c.488.259 1.092.388 1.812.388 1.085 0 1.955-.309 2.61-.927.654-.618.982-1.464.982-2.536 0-.577-.139-1.09-.415-1.54-.277-.45-.691-.798-1.244-1.045a22.734 22.734 0 0 0-1.555-.625 13.696 13.696 0 0 1-1.513-.646 3.974 3.974 0 0 1-1.583-1.388 3.61 3.61 0 0 1-.6-2.041c0-.72.155-1.383.466-1.99a5.165 5.165 0 0 1 1.23-1.574c.495-.427 1.094-.768 1.798-1.023a6.12 6.12 0 0 1 2.093-.383Z" fill="currentColor"></path><path clip-rule="evenodd" d="M5.821.23c2.754 0 5.015 2.303 5.015 5.09 0 2.854-2.26 5.18-4.992 5.18h-2.35v5.411a.45.45 0 0 1-.427.438H.426A.432.432 0 0 1 0 15.91V.668C0 .438.18.23.426.23H5.82ZM3.493 7.138H5.62c.963 0 1.77-.782 1.77-1.819 0-.967-.807-1.704-1.77-1.704H3.493v3.523ZM22.367 0c.157 0 .313.116.38.254l7.008 15.495c.134.3-.044.6-.38.6H26.89c-.403 0-.583-.14-.785-.576l-.805-1.819h-6.09l-.806 1.842c-.112.276-.358.553-.805.553h-2.463c-.336 0-.515-.3-.381-.6L21.763.254a.454.454 0 0 1 .38-.254h.224Zm-1.813 10.822h3.402l-1.701-3.8h-.023l-1.678 3.8ZM43.188.23c2.687 0 4.881 2.234 4.881 4.974 0 2.118-1.365 3.822-3.313 4.628l3.067 5.849c.157.299 0 .668-.38.668h-2.978a.411.411 0 0 1-.359-.208L41.13 10.04h-1.545v5.871c0 .23-.201.437-.425.438h-2.664a.432.432 0 0 1-.426-.438V.668c0-.23.18-.438.426-.438h6.694Zm-3.604 6.885h3.313c.918 0 1.702-.875 1.702-1.842 0-.967-.783-1.75-1.701-1.75h-3.314v3.592Z" fill="currentColor" fill-rule="evenodd"></path><path d="M64.302.23c.246 0 .425.208.425.438v2.51c0 .23-.179.437-.425.437H61.1v12.296c0 .23-.203.438-.426.438h-2.687a.447.447 0 0 1-.425-.438V3.615H54.36a.431.431 0 0 1-.424-.437V.668c0-.23.178-.437.424-.438h9.94Zm9.113 0c.179 0 .29.116.357.208l3.113 4.72 3.112-4.72c.067-.092.157-.208.359-.208h2.91c.358 0 .537.37.358.668l-5.016 7.668v7.345c0 .23-.2.438-.424.438h-2.665a.432.432 0 0 1-.425-.438V8.59L70.146.899c-.18-.3 0-.668.358-.669h2.911Zm41.268.907a6.132 6.132 0 0 0-.728.094 6.888 6.888 0 0 0-.836.198c-.284.097-.492.254-.623.471a2.472 2.472 0 0 0-.285.684l-2.422 10.828c-.058.263-.104.495-.137.693a3.09 3.09 0 0 0-.049.49c0 .412.162.67.487.775.324.105.917.157 1.778.157.481 0 1.03-.042 1.647-.129.615-.085 1.045-.241 1.285-.466.372-.338.841-.86 1.406-1.569.566-.708.987-1.295 1.264-1.76h.776l-1.39 4.746h-12.133l.164-.743c.182-.014.441-.04.776-.079.335-.037.58-.086.732-.146.263-.105.461-.257.596-.455a1.84 1.84 0 0 0 .279-.692L109.863 2.7a4.06 4.06 0 0 0 .038-.208c.011-.071.017-.14.017-.208a.914.914 0 0 0-.093-.41.793.793 0 0 0-.334-.32 2.736 2.736 0 0 0-.639-.259 4.455 4.455 0 0 0-.716-.157l.164-.742h6.546l-.163.742Z" fill="currentColor"></path><path clip-rule="evenodd" d="M135.471 13.987c.044.277.117.511.219.703.102.19.255.369.459.534.146.105.342.193.591.264.247.071.466.11.656.118l-.165.743h-6.343l.164-.743c.226-.022.49-.054.793-.095a4.59 4.59 0 0 0 .705-.14 1.93 1.93 0 0 0 .508-.236c.113-.082.17-.21.17-.382a27.892 27.892 0 0 0-.131-1.099c-.086-.673-.208-1.619-.367-2.838h-5.45c-.24.39-.495.84-.765 1.352-.269.512-.477.904-.622 1.173a7.648 7.648 0 0 0-.377.802c-.121.295-.181.491-.181.588 0 .247.194.446.58.595.386.15.871.243 1.454.28l-.164.743h-5.957l.164-.743c.19-.014.436-.058.738-.13a2.74 2.74 0 0 0 .76-.286c.255-.15.501-.335.738-.556.237-.221.49-.553.76-.995 1.26-2.054 2.643-4.34 4.149-6.859 1.504-2.518 2.829-4.721 3.974-6.61h.874l2.066 13.817Zm-7.595-4.115h4.69l-.975-6.226-3.715 6.226Z" fill="currentColor" fill-rule="evenodd"></path><path d="M157.43 4.723h-.754a8.549 8.549 0 0 0-.104-1 5.834 5.834 0 0 0-.267-1.091 3.005 3.005 0 0 0-.485-.889c-.2-.247-.437-.393-.713-.438a9.334 9.334 0 0 0-.834-.068 21.256 21.256 0 0 0-.942-.022h-.687L149.75 14.09a1.86 1.86 0 0 0-.043.403c0 .18.032.328.098.444.066.117.19.22.372.31.145.059.41.133.792.219.383.086.695.133.935.14l-.175.743h-7.33l.175-.743c.218-.014.536-.044.951-.09.415-.044.718-.1.907-.168.292-.112.51-.266.656-.461a1.77 1.77 0 0 0 .306-.697l2.916-12.975h-.58c-.218 0-.493.005-.821.016-.329.012-.665.036-1.007.074-.241.03-.522.178-.843.444-.321.266-.643.58-.964.938-.306.353-.584.711-.832 1.075a8.589 8.589 0 0 0-.58.96h-.765l.972-4.327h13.513l-.973 4.328Zm17.706-.483h-.82c-.043-.795-.206-1.462-.486-2.002-.281-.54-.658-.846-1.132-.922a9.402 9.402 0 0 0-.798-.067 22.327 22.327 0 0 0-1.06-.022h-2.493l-1.443 6.42h1.753c.541 0 .961-.055 1.26-.164.3-.108.567-.29.8-.545.219-.225.431-.534.636-.927.204-.394.35-.727.438-.996h.82l-1.399 6.23h-.82c0-.083.005-.182.016-.299a4.02 4.02 0 0 0 .016-.377c0-.277-.018-.543-.054-.798-.036-.255-.087-.442-.152-.562-.153-.293-.371-.483-.654-.573-.283-.09-.653-.135-1.11-.135h-1.742l-1.097 4.88a6.02 6.02 0 0 0-.11.59 3.903 3.903 0 0 0-.044.497c0 .413.145.688.433.823.288.135.925.202 1.91.202 1.226 0 2.058-.044 2.496-.135.437-.09.762-.221.974-.394.416-.346.903-.898 1.461-1.657.559-.76.933-1.313 1.122-1.659h.787l-1.346 4.7H160.41l.165-.742c.225-.014.524-.046.896-.095.371-.049.622-.1.754-.152.255-.097.45-.244.585-.44a1.78 1.78 0 0 0 .279-.685l2.603-11.58c.014-.06.027-.127.038-.202a1.48 1.48 0 0 0 .016-.214.866.866 0 0 0-.093-.404.736.736 0 0 0-.333-.304c-.175-.097-.423-.183-.744-.259a5.644 5.644 0 0 0-.754-.134l.164-.742H176l-.864 3.844Z" fill="currentColor"></path></svg>
+    </div>
+    <ul class="nav-links">
+      <li><button class="nav-link active" data-page="overview" onclick="showPage('overview')">Overview</button></li>
+      <li><button class="nav-link" data-page="profile" onclick="showPage('profile')">PartySlate Profile</button></li>
+      <li><button class="nav-link" data-page="photohub" onclick="showPage('photohub')">Photo Hub</button></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="btn btn-secondary" href="https://pro.partyslate.com/en/view/login">Log In</a>
+      <a class="btn btn-primary" href="https://share.hsforms.com/1FrPUvM3kS-e_4NsRI0sqAg4jzhk" target="_blank" rel="noopener noreferrer">Book a Demo</a>
+    </div>
+  </div>
+  </nav>
+</div>
+
+<div class="page active" id="page-overview">
+
+  <section class="hero edit-mixed">
+    <div class="container">
+      <h1 class="display">Turn event photos<br>into revenue</h1>
+      <p class="subtitle edit-proposed">Use your best work to get discovered, sell visually, and book more business.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://share.hsforms.com/1FrPUvM3kS-e_4NsRI0sqAg4jzhk" target="_blank" rel="noopener noreferrer">Book a Demo</a>
+        <a class="btn btn-secondary" href="https://pro.partyslate.com/en/view/register">Create Free Profile</a>
+      </div>
+
+      <div class="media-slot aspect-16-9" data-gif-slot="hero-demo">
+        <video autoplay muted loop playsinline poster="https://img.partyslate.com/image-assets/pro-landing-page/overview-tab/overview_hero_video.mp4/ik-thumbnail.jpg">
+          <source src="https://img.partyslate.com/image-assets/pro-landing-page/overview-tab/overview_hero_video.mp4?tr=f-auto" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats edit-unchanged">
+    <div class="container">
+      <div class="stats-grid">
+        <div>
+          <div class="stat-number display">3.7M</div>
+          <div class="stat-label">People using PartySlate annually</div>
+        </div>
+        <div>
+          <div class="stat-number display">40+</div>
+          <div class="stat-label">Types of weddings, events, &amp; celebrations supported</div>
+        </div>
+        <div>
+          <div class="stat-number display">47K</div>
+          <div class="stat-label">Top venues and vendors across the country use PartySlate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="value-props edit-proposed">
+    <div class="container">
+      <div class="value-props-header">
+        <h2 class="display">One platform. Two ways<br>to drive more business.</h2>
+      </div>
+
+      <div class="value-props-grid">
+        <div class="value-prop-card profile">
+          <svg class="value-prop-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="10" r="3.5" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M 5 20 Q 11 15 17 20" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <line x1="19" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <line x1="19" y1="14" x2="24" y2="14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <line x1="19" y1="18" x2="22" y2="18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <div class="value-prop-eyebrow">Get Discovered</div>
+          <h3 class="display">Reach the right clients</h3>
+          <p class="value-prop-body">Your PartySlate Profile puts your business in front of high-intent clients actively searching for venues and event professionals like you.</p>
+          <ul class="value-prop-list">
+            <li>
+              <svg viewBox="0 0 12 12" fill="none"><path d="M 2.5 6 L 5 8.5 L 9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Get found through high-intent Google searches</p>
+            </li>
+            <li>
+              <svg viewBox="0 0 12 12" fill="none"><path d="M 2.5 6 L 5 8.5 L 9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Showcase real events, spaces, and what your business offers</p>
+            </li>
+            <li>
+              <svg viewBox="0 0 12 12" fill="none"><path d="M 2.5 6 L 5 8.5 L 9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Reach clients planning weddings, corporate events, and large-scale social events</p>
+            </li>
+            <li>
+              <svg viewBox="0 0 12 12" fill="none"><path d="M 2.5 6 L 5 8.5 L 9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Build credibility through real-event content, partner credits, and referrals</p>
+            </li>
+          </ul>
+          <button class="value-prop-cta" onclick="showPage('profile')">
+            Explore PartySlate Profile
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 2 8 L 14 8 M 9 3 L 14 8 L 9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="value-prop-card photohub">
+          <svg class="value-prop-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="9" width="16" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-5 12 16)"/>
+            <rect x="7" y="6" width="16" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="white"/>
+            <circle cx="11" cy="11" r="1.5" fill="currentColor"/>
+            <path d="M 8 16 L 12 12 L 14.5 14 L 18 11 L 22 14.5 L 22 18 L 8 18 Z" fill="currentColor"/>
+          </svg>
+          <div class="value-prop-eyebrow">Sell Visually</div>
+          <h3 class="display">Turn interest into booked business</h3>
+          <p class="value-prop-body">Photo Hub gives your team the real event photos and visual sales tools to help clients picture their event and move closer to booking.</p>
+          <ul class="value-prop-list">
+            <li>
+              <svg viewBox="0 0 12 12" fill="none"><path d="M 2.5 6 L 5 8.5 L 9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Make inquiry responses more visual</p>
+            </li>
+            <li>
+              <svg viewBox="0 0 12 12" fill="none"><path d="M 2.5 6 L 5 8.5 L 9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Bring spaces to life during site tours</p>
+            </li>
+            <li>
+              <svg viewBox="0 0 12 12" fill="none"><path d="M 2.5 6 L 5 8.5 L 9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Personalize proposals with relevant event photos</p>
+            </li>
+            <li>
+              <svg viewBox="0 0 12 12" fill="none"><path d="M 2.5 6 L 5 8.5 L 9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <p>Keep selling with customized follow-ups</p>
+            </li>
+          </ul>
+          <button class="value-prop-cta" onclick="showPage('photohub')">
+            Explore Photo Hub
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 2 8 L 14 8 M 9 3 L 14 8 L 9 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="built-for edit-unchanged">
+    <div class="container">
+      <h2 class="display">We're built for</h2>
+      <div class="audience-tabs">
+        <div class="audience-tab active" onclick="showAudience('independentVenues', this)">Independent Venues</div>
+        <div class="audience-tab" onclick="showAudience('hotels', this)">Hotels</div>
+        <div class="audience-tab" onclick="showAudience('destinationVenues', this)">Destination Venues</div>
+        <div class="audience-tab" onclick="showAudience('planners', this)">Planners</div>
+        <div class="audience-tab" onclick="showAudience('vendors', this)">Vendors</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="full-bleed edit-unchanged" id="full-bleed" style="background-image: url('https://img.partyslate.com/image-assets/pro-landing-page/overview-tab/vendor-tab-images/independentVenues@2x.png?tr=w-1600');">
+    <div class="full-bleed-content">
+      <h2 class="display" id="full-bleed-heading">Turn inquiries into confirmed events</h2>
+      <p id="full-bleed-text">Show clients how your space looks fully styled for real events so decisions happen faster and dates get secured.</p>
+    </div>
+  </section>
+  <div class="photo-credit edit-unchanged" id="photo-credit">Venue: The Geraghty &nbsp;&nbsp; Photographer: Studio This Is</div>
+
+  <section class="trusted edit-unchanged">
+    <div class="container">
+      <h2 class="display">Trusted by industry leaders</h2>
+      <div class="trusted-logos">
+        <img src="assets/logos/colin-cowie-lifestyle.png" alt="Colin Cowie Lifestyle" height="28">
+        <img src="assets/logos/kristin-banta-events.png" alt="Kristin Banta Events" height="28">
+        <img src="assets/logos/live-nation.png" alt="Live Nation" height="21">
+        <img src="assets/logos/wolfgang-puck-catering.png" alt="Wolfgang Puck Catering" height="28">
+        <img src="assets/logos/mindy-weiss.png" alt="Mindy Weiss" height="28">
+        <img src="assets/logos/andaz.png" alt="Andaz" height="28">
+        <img src="assets/logos/the-langham-boston.png" alt="The Langham Boston" height="28">
+        <img src="assets/logos/montage-international.png" alt="Montage International" height="28">
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section edit-mixed">
+    <div class="container">
+      <div class="edit-proposed">
+        <h2 class="display">Ready to put your<br>photos to work?</h2>
+        <p>Join 47,000+ event professionals using PartySlate to get discovered, sell visually, and win more business.</p>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://share.hsforms.com/1FrPUvM3kS-e_4NsRI0sqAg4jzhk" target="_blank" rel="noopener noreferrer">Book a Demo</a>
+        <a class="btn btn-secondary" href="https://pro.partyslate.com/en/view/register">Create Free Profile</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="page" id="page-profile">
+
+  <section class="hero edit-mixed">
+    <div class="container">
+      <h1 class="display">Get discovered by<br>the right clients</h1>
+      <p class="subtitle edit-proposed">Showcase your work alongside the venues and planners you partner with to reach more event hosts.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://share.hsforms.com/1FrPUvM3kS-e_4NsRI0sqAg4jzhk" target="_blank" rel="noopener noreferrer">Book a Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-row">
+    <div class="feature-text edit-unchanged">
+      <h2 class="display">A search presence<br>that pays off</h2>
+      <p>Appear in high-intent organic search results across weddings, corporate, and large-scale social events.</p>
+    </div>
+    <div class="feature-media">
+      <div class="media-slot" style="border-radius:0; min-height:100%;">
+        <img src="assets/profile/search-presence.jpg" alt="A search presence that pays off">
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-row reverse edit-unchanged">
+    <div class="feature-text">
+      <h2 class="display">Showcase versatility<br>that builds confidence</h2>
+      <p>Highlight event types, spaces, pricing, and recent work so clients can quickly see they're in the right place.</p>
+    </div>
+    <div class="feature-media">
+      <div class="media-slot" style="border-radius:0; min-height:100%;">
+        <img src="https://img.partyslate.com/image-assets/pro-landing-page/profile-tab/heros/showcase_versatility.png?tr=w-800" alt="Showcase versatility that builds confidence">
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-row edit-unchanged">
+    <div class="feature-text">
+      <h2 class="display">Amplify your reach<br>through partners</h2>
+      <p>Each partner credit places your brand on their profile, broadening your reach and strengthening your referral network.</p>
+    </div>
+    <div class="feature-media">
+      <div class="media-slot" style="border-radius:0; min-height:100%;">
+        <img src="https://img.partyslate.com/image-assets/pro-landing-page/profile-tab/heros/amplify_your_reach.png?tr=w-800" alt="Amplify your reach through partners">
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section after-features edit-unchanged">
+    <div class="container">
+      <h2 class="display">Ready to transform how<br>you showcase your work?</h2>
+      <p>Join 47,000+ event professionals using PartySlate to win more business. Start with a free profile today.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://share.hsforms.com/1FrPUvM3kS-e_4NsRI0sqAg4jzhk" target="_blank" rel="noopener noreferrer">Book a Demo</a>
+        <a class="btn btn-secondary" href="https://pro.partyslate.com/en/view/register">Create Free Profile</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="page" id="page-photohub">
+
+  <section class="hero edit-proposed">
+    <div class="container">
+      <h1 class="display">Don't just show<br>your work. Sell with it.</h1>
+      <p class="subtitle">Turn your event photos into a visual sales tool that helps clients picture their event and move closer to booking.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://share.hsforms.com/1FrPUvM3kS-e_4NsRI0sqAg4jzhk" target="_blank" rel="noopener noreferrer">Book a Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use case 1: Inquiry Response -->
+  <section class="feature-row edit-proposed">
+    <div class="feature-text">
+      <h2 class="display">Make every inquiry<br>response more visual</h2>
+      <p>Show prospects relevant real-event photos from the start, so they can immediately see that you understand the event they're planning.</p>
+    </div>
+    <div class="feature-media">
+      <div class="media-slot" style="border-radius:0; min-height:100%;">
+        <img src="assets/photohub/inquiry-response.jpg" alt="Faena Hotel Miami Beach Photo Board used in an inquiry response">
+      </div>
+    </div>
+  </section>
+
+  <!-- Use case 2: Site Tours -->
+  <section class="feature-row reverse edit-proposed">
+    <div class="feature-text">
+      <h2 class="display">Bring every space<br>to life</h2>
+      <p>Show clients real events in the spaces they're touring, helping them see different layouts, decor, setups, and possibilities for their own event.</p>
+    </div>
+    <div class="feature-media">
+      <div class="media-slot" style="border-radius:0; min-height:100%;">
+        <img src="assets/photohub/ipad.jpg" alt="Photo Hub used on an iPad during a venue tour">
+      </div>
+    </div>
+  </section>
+
+  <!-- Use case 3: Proposals -->
+  <section class="feature-row edit-proposed">
+    <div class="feature-text">
+      <h2 class="display">Make your proposal<br>feel like their event</h2>
+      <p>Pair the experience you're proposing with photos that reinforce the vision and value, helping clients understand exactly what they're saying yes to.</p>
+    </div>
+    <div class="feature-media">
+      <div class="media-slot" style="border-radius:0; min-height:100%;">
+        <img src="assets/photohub/proposal.jpg" alt="A personalized Photo Board for a couple's Hilton Chicago wedding">
+      </div>
+    </div>
+  </section>
+
+  <!-- Use case 4: Customized Follow-Up -->
+  <section class="feature-row reverse edit-proposed">
+    <div class="feature-text">
+      <h2 class="display">Keep selling<br>after the meeting</h2>
+      <p>Answer client questions with photos tailored to what they want to see next, from rain plans and room layouts to nighttime setups and event-specific ideas.</p>
+    </div>
+    <div class="feature-media">
+      <div class="media-slot" style="border-radius:0; min-height:100%;">
+        <img src="assets/photohub/custom-followup.jpg" alt="A custom Trustees Food Board Ideas Photo Board from Gourmet Caterers">
+      </div>
+    </div>
+  </section>
+
+  <section class="capability-section edit-proposed">
+    <div class="container">
+      <div class="capability-header">
+        <h2 class="display">Everything you need<br>to sell visually</h2>
+      </div>
+      <div class="capability-grid">
+        <div class="capability-card">
+          <svg class="capability-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="9" width="16" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-5 12 16)"/>
+            <rect x="7" y="6" width="16" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="white"/>
+            <circle cx="11" cy="11" r="1.5" fill="currentColor"/>
+            <path d="M 8 16 L 12 12 L 14.5 14 L 18 11 L 22 14.5 L 22 18 L 8 18 Z" fill="currentColor"/>
+          </svg>
+          <h3>Keep every photo in one place</h3>
+          <p>Upload your entire event photo library to one private workspace, so your team has one place to access the photos you already have.</p>
+          <div class="capability-features">
+            <span class="capability-feature-tag">Unlimited storage</span>
+            <span class="capability-feature-tag">Team-wide access</span>
+            <span class="capability-feature-tag">Complimentary setup</span>
+          </div>
+        </div>
+        <div class="capability-card">
+          <svg class="capability-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.6"/>
+            <line x1="17.5" y1="17.5" x2="23" y2="23" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <h3>Find the right photo in seconds</h3>
+          <p>Search and filter your library by space, event type, style, decor, season, or setup, whatever a client has in mind.</p>
+          <div class="capability-features">
+            <span class="capability-feature-tag">Automatic tagging</span>
+            <span class="capability-feature-tag">AI-powered search</span>
+            <span class="capability-feature-tag">Event space filters</span>
+          </div>
+        </div>
+        <div class="capability-card">
+          <svg class="capability-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 14 L24 4 L18 24 L13 15 L4 14 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+            <line x1="13" y1="15" x2="24" y2="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <h3>Put your photos to work</h3>
+          <p>Use the photos you find across the sales process, from the first response to the final follow-up.</p>
+          <div class="capability-features">
+            <span class="capability-feature-tag">Branded photo galleries</span>
+            <span class="capability-feature-tag">Tour-ready presentation mode</span>
+            <span class="capability-feature-tag">Canva integration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section edit-unchanged">
+    <div class="container">
+      <h2 class="display">Ready to transform how<br>you showcase your work?</h2>
+      <p>Join 47,000+ event professionals using PartySlate to win more business. Start with a free profile today.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://share.hsforms.com/1FrPUvM3kS-e_4NsRI0sqAg4jzhk" target="_blank" rel="noopener noreferrer">Book a Demo</a>
+        <a class="btn btn-secondary" href="https://pro.partyslate.com/en/view/register">Create Free Profile</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer edit-unchanged">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <svg class="footer-logo-svg" fill="none" viewBox="0 0 168 16" xmlns="http://www.w3.org/2000/svg" aria-label="PartySlate"><path clip-rule="evenodd" d="M5.36 6.83a1.7 1.7 0 0 0 1.7-1.74c0-.92-.78-1.63-1.7-1.63H3.33v3.37h2.03ZM0 .64C0 .42.17.22.4.22h5.16c2.63 0 4.78 2.2 4.78 4.87a4.89 4.89 0 0 1-4.76 4.96H3.33v5.18c0 .22-.19.42-.4.42H.4a.41.41 0 0 1-.41-.42V.64Zm22.87 9.72-1.63-3.64h-.02l-1.6 3.64h3.25Zm-8.79 4.72L20.78.24a.43.43 0 0 1 .36-.24h.21c.15 0 .3.11.36.24l6.7 14.84c.12.28-.05.57-.37.57h-2.37c-.39 0-.56-.13-.75-.55l-.77-1.74h-5.81l-.77 1.76a.8.8 0 0 1-.77.53h-2.35c-.32 0-.5-.29-.37-.57Zm26.87-8.27c.87 0 1.62-.84 1.62-1.76 0-.93-.75-1.68-1.62-1.68h-3.17v3.44h3.17ZM34.43.64c0-.22.17-.42.4-.42h6.4a4.72 4.72 0 0 1 4.65 4.76c0 2.03-1.3 3.66-3.16 4.43l2.93 5.6c.15.29 0 .64-.36.64h-2.85a.4.4 0 0 1-.34-.2l-2.84-5.84h-1.48v5.62c0 .22-.19.42-.4.42h-2.54a.41.41 0 0 1-.41-.42V.64Zm20.52 2.82h-3.06c-.23 0-.4-.2-.4-.42V.64c0-.22.17-.42.4-.42h9.49c.23 0 .4.2.4.42v2.4c0 .22-.17.42-.4.42h-3.06v11.77c0 .22-.19.42-.4.42h-2.57c-.21 0-.4-.2-.4-.42V3.46Zm16.73 4.76L66.96.86c-.17-.29 0-.64.34-.64h2.78c.17 0 .28.11.34.2l2.97 4.52L76.36.42c.06-.09.15-.2.34-.2h2.78c.34 0 .51.35.34.64L75.04 8.2v7.03c0 .22-.2.42-.41.42h-2.54c-.24 0-.4-.2-.4-.42v-7Zm17.43 7.74a7 7 0 0 1-2.25-.32 5.93 5.93 0 0 1-1.55-.76l-.6.78h-.83l1.02-5.23h.84c.04.63.12 1.21.25 1.76.13.54.34 1.03.63 1.47.3.45.67.8 1.13 1.05.47.25 1.05.37 1.73.37a3.5 3.5 0 0 0 2.5-.89c.62-.59.93-1.4.93-2.42a2.58 2.58 0 0 0-1.58-2.48c-.5-.22-1-.42-1.49-.6-.49-.17-.97-.38-1.44-.62a3.8 3.8 0 0 1-1.51-1.33 3.47 3.47 0 0 1-.57-1.95c0-.69.14-1.32.44-1.9a4.95 4.95 0 0 1 2.9-2.5 5.83 5.83 0 0 1 1.99-.36c.62 0 1.2.08 1.76.23a5 5 0 0 1 1.66.85l.58-.73h.83l-1.05 5.07h-.85a14.5 14.5 0 0 0-.16-1.71 4.46 4.46 0 0 0-.44-1.47 2.53 2.53 0 0 0-.96-1 3.33 3.33 0 0 0-1.64-.35 2.92 2.92 0 0 0-2.9 2.96c0 .53.11.98.32 1.35.2.37.52.67.95.9.46.24.94.45 1.44.62.5.18.96.37 1.35.56.8.39 1.42.85 1.87 1.4.45.54.67 1.21.67 2a4.82 4.82 0 0 1-1.76 3.79 6.16 6.16 0 0 1-4.2 1.46Zm23.76-4.86-1.33 4.55H99.97l.16-.7.74-.08c.32-.04.55-.09.7-.14.25-.1.44-.25.57-.44.13-.2.22-.41.26-.66l2.48-11.05a3.81 3.81 0 0 0 .05-.4.87.87 0 0 0-.09-.39.76.76 0 0 0-.32-.3 4.22 4.22 0 0 0-1.3-.4l.17-.71h6.25l-.16.7a5.83 5.83 0 0 0-1.5.29c-.26.1-.46.24-.59.45-.12.2-.21.43-.27.65l-2.31 10.37a13.04 13.04 0 0 0-.18 1.13c0 .4.16.64.47.74.3.1.87.16 1.7.16.45 0 .98-.05 1.56-.13.6-.08 1-.23 1.23-.45.36-.32.8-.82 1.34-1.5.54-.67.95-1.24 1.21-1.68h.74Zm12.23 3.84-.16.71h6.05l.16-.7a2.68 2.68 0 0 1-1.19-.38 1.7 1.7 0 0 1-.65-1.18L127.34.16h-.83c-1.1 1.81-2.36 3.92-3.8 6.33-1.43 2.41-2.75 4.6-3.96 6.57a4 4 0 0 1-1.43 1.49c-.2.1-.43.2-.72.27s-.53.1-.7.12l-.16.71h5.68l.16-.7a4.7 4.7 0 0 1-1.39-.28c-.37-.14-.55-.33-.55-.57a6.13 6.13 0 0 1 .53-1.33l.6-1.12c.25-.5.5-.92.73-1.3h5.2a5509.36 5509.36 0 0 1 .47 3.77c0 .17-.05.3-.16.37-.1.08-.27.15-.48.23a22.15 22.15 0 0 1-1.43.23Zm.51-11.45.93 5.96h-4.48l3.55-5.96ZM151.2.38l-.93 4.14h-.72a8.1 8.1 0 0 0-.35-2 2.89 2.89 0 0 0-.46-.85 1.1 1.1 0 0 0-.68-.42 20.28 20.28 0 0 0-1.7-.09h-.65l-2.77 12.33a1.35 1.35 0 0 0-.04.38c0 .18.03.32.1.43.06.11.18.21.35.3a7.3 7.3 0 0 0 1.65.34l-.17.71h-7l.17-.7.91-.1c.4-.04.69-.1.87-.16a1.37 1.37 0 0 0 .91-1.1l2.79-12.43h-.56a24 24 0 0 0-1.74.09c-.23.03-.5.17-.8.42a8.62 8.62 0 0 0-1.72 1.93c-.24.35-.42.66-.55.92h-.73l.93-4.14h12.9Zm16.8 0-.82 3.68h-.79c-.04-.76-.2-1.4-.46-1.92-.27-.51-.63-.8-1.08-.88a21.29 21.29 0 0 0-1.77-.09h-2.39l-1.37 6.15h1.67c.52 0 .92-.05 1.2-.16.29-.1.54-.27.77-.52a6.62 6.62 0 0 0 1.03-1.84h.77l-1.33 5.96h-.78l.01-.28.02-.36c0-.27-.02-.52-.05-.77a1.67 1.67 0 0 0-.15-.53 1.05 1.05 0 0 0-.62-.55 3.58 3.58 0 0 0-1.06-.13h-1.67l-1.04 4.67a5.88 5.88 0 0 0-.15 1.04c0 .4.14.66.41.79.28.13.89.2 1.83.2 1.17 0 1.96-.05 2.38-.14.42-.08.73-.2.93-.37a16.62 16.62 0 0 0 2.47-3.17h.75l-1.29 4.5h-12.3l.16-.72c.21-.01.5-.04.85-.1.36-.04.6-.09.72-.14.25-.09.43-.23.56-.42.13-.18.22-.4.27-.65l2.48-11.09a2.29 2.29 0 0 0 .05-.4.84.84 0 0 0-.09-.38.7.7 0 0 0-.31-.3 5.4 5.4 0 0 0-1.43-.38l.15-.7H168Z" fill="currentColor" fill-rule="evenodd"></path></svg>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/partyslate" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"></path></svg></a>
+        <a href="https://www.instagram.com/partyslate/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 512 512" fill="currentColor" width="18" height="18"><path d="M349.33 69.33a93.62 93.62 0 0 1 93.34 93.34v186.66a93.62 93.62 0 0 1-93.34 93.34H162.67a93.62 93.62 0 0 1-93.34-93.34V162.67a93.62 93.62 0 0 1 93.34-93.34h186.66m0-37.33H162.67C90.8 32 32 90.8 32 162.67v186.66C32 421.2 90.8 480 162.67 480h186.66C421.2 480 480 421.2 480 349.33V162.67C480 90.8 421.2 32 349.33 32z"></path><path d="M377.33 162.67a28 28 0 1 1 28-28 27.94 27.94 0 0 1-28 28zM256 181.33A74.67 74.67 0 1 1 181.33 256 74.75 74.75 0 0 1 256 181.33m0-37.33a112 112 0 1 0 112 112 112 112 0 0 0-112-112z"></path></svg></a>
+        <a href="https://www.pinterest.com/partyslate/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest"><svg viewBox="0 0 512 512" fill="currentColor" width="18" height="18"><path d="M256.05 32c-123.7 0-224 100.3-224 224 0 91.7 55.2 170.5 134.1 205.2-.6-15.6-.1-34.4 3.9-51.4 4.3-18.2 28.8-122.1 28.8-122.1s-7.2-14.3-7.2-35.4c0-33.2 19.2-58 43.2-58 20.4 0 30.2 15.3 30.2 33.6 0 20.5-13.1 51.1-19.8 79.5-5.6 23.8 11.9 43.1 35.4 43.1 42.4 0 71-54.5 71-119.1 0-49.1-33.1-85.8-93.2-85.8-67.9 0-110.3 50.7-110.3 107.3 0 19.5 5.8 33.3 14.8 43.9 4.1 4.9 4.7 6.9 3.2 12.5-1.1 4.1-3.5 14-4.6 18-1.5 5.7-6.1 7.7-11.2 5.6-31.3-12.8-45.9-47-45.9-85.6 0-63.6 53.7-139.9 160.1-139.9 85.5 0 141.8 61.9 141.8 128.3 0 87.9-48.9 153.5-120.9 153.5-24.2 0-46.9-13.1-54.7-27.9 0 0-13 51.6-15.8 61.6-4.7 17.3-14 34.5-22.5 48a225.13 225.13 0 0 0 63.5 9.2c123.7 0 224-100.3 224-224S379.75 32 256.05 32z"></path></svg></a>
+        <a href="https://www.tiktok.com/@partyslate" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 512 512" fill="currentColor" width="18" height="18"><path d="M412.19 118.66a109.27 109.27 0 0 1-9.45-5.5 132.87 132.87 0 0 1-24.27-20.62c-18.1-20.71-24.86-41.72-27.35-56.43h.1C349.14 23.9 350 16 350.13 16h-82.44v318.78c0 4.28 0 8.51-.18 12.69 0 .52-.05 1-.08 1.56 0 .23 0 .47-.05.71v.18a70 70 0 0 1-35.22 55.56 68.8 68.8 0 0 1-34.11 9c-38.41 0-69.54-31.32-69.54-70s31.13-70 69.54-70a68.9 68.9 0 0 1 21.41 3.39l.1-83.94a153.14 153.14 0 0 0-118 34.52 161.79 161.79 0 0 0-35.3 43.53c-3.48 6-16.61 30.11-18.2 69.24-1 22.21 5.67 45.22 8.85 54.73v.2c2 5.6 9.75 24.71 22.38 40.82A167.53 167.53 0 0 0 115 470.66v-.2l.2.2c39.91 27.12 84.16 25.34 84.16 25.34 7.66-.31 33.32 0 62.46-13.81 32.32-15.31 50.72-38.12 50.72-38.12a158.46 158.46 0 0 0 27.64-45.93c7.46-19.61 9.95-43.13 9.95-52.53V176.49c1 .6 14.32 9.41 14.32 9.41s19.19 12.3 49.13 20.31c21.48 5.7 50.42 6.9 50.42 6.9v-81.84c-10.14 1.1-30.73-2.1-51.81-12.61z"></path></svg></a>
+      </div>
+    </div>
+    <div>
+      <h4>For Event Professionals</h4>
+      <ul>
+        <li><a href="https://pro.partyslate.com/en/view/pricing">Become a member</a></li>
+        <li><a href="https://www.partyslate.com/digital-events" target="_blank" rel="noopener noreferrer">Digital Events</a></li>
+        <li><a href="mailto:support@partyslate.com">Contact PRO Support</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Company</h4>
+      <ul>
+        <li><a href="https://www.partyslate.com/about" target="_blank" rel="noopener noreferrer">About us</a></li>
+        <li><a href="mailto:contact@partyslate.com">Contact PartySlate</a></li>
+        <li><a href="https://partyslate.scalis.ai/jobs" target="_blank" rel="noopener noreferrer">Careers</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="copyright">© PartySlate 2026</div>
+      <ul>
+        <li><a href="https://pro.partyslate.com/en/view/privacy-policy">Privacy Policy</a></li>
+        <li><a href="https://pro.partyslate.com/en/view/terms-of-use">Terms of Use</a></li>
+        <li><a href="https://pro.partyslate.com/en/view/pro-terms-of-use">Pro Terms of Use</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(el) {
+    el.classList.toggle('active', el.id === 'page-' + id);
+  });
+  document.querySelectorAll('.nav-link').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.page === id);
+  });
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+var AUDIENCE_DATA = {
+  independentVenues: {
+    img: 'https://img.partyslate.com/image-assets/pro-landing-page/overview-tab/vendor-tab-images/independentVenues@2x.png?tr=w-1600',
+    heading: 'Turn inquiries into confirmed events',
+    text: 'Show clients how your space looks fully styled for real events so decisions happen faster and dates get secured.',
+    credit: 'Venue: The Geraghty &nbsp;&nbsp; Photographer: Studio This Is'
+  },
+  hotels: {
+    img: 'https://img.partyslate.com/image-assets/pro-landing-page/overview-tab/vendor-tab-images/hotels@2x.png?tr=w-1600',
+    heading: 'Maximize revenue across every space',
+    text: 'Showcase ballrooms, rooftops, breakout rooms, and F&amp;B setups instantly to support upgrades and increase total event value.',
+    credit: 'Venue: The Plaza New York &nbsp;&nbsp; Photographer: Brett Matthews Photography'
+  },
+  destinationVenues: {
+    img: 'https://img.partyslate.com/image-assets/pro-landing-page/overview-tab/vendor-tab-images/destinationVenues@2x.png?tr=w-1600',
+    heading: 'Secure destination bookings with confidence.',
+    text: 'Share visual examples of the space in use so remote clients can make a high-value decision without an on-site tour.',
+    credit: 'Venue: Waldorf Astoria Los Cabos Pedregal &nbsp;&nbsp; Los Cabos Luxury Resort'
+  },
+  planners: {
+    img: 'https://img.partyslate.com/image-assets/pro-landing-page/overview-tab/vendor-tab-images/planners@2x.png?tr=w-1600',
+    heading: 'Win luxury clients with stronger visual proof.',
+    text: 'Instantly pull curated examples that demonstrate scale, style, and execution so clients commit to your vision and your pricing.',
+    credit: 'Event Planner: Mindy Weiss Party Consultants &nbsp;&nbsp; Photographer: Simone and Martin Photography'
+  },
+  vendors: {
+    img: 'https://img.partyslate.com/image-assets/pro-landing-page/overview-tab/vendor-tab-images/vendors@2x.png?tr=w-1600',
+    heading: 'Turn every event into future business.',
+    text: 'Build a searchable portfolio and send polished visuals that secure approvals faster and strengthen partner referrals.',
+    credit: 'Caterer: Mary Giuliani Catering &amp; Events &nbsp;&nbsp; Photographer: Fred Marcus Studio'
+  }
+};
+
+function toggleHighlightEdits() {
+  var active = document.body.classList.toggle('highlight-edits');
+  var btn = document.getElementById('highlight-toggle');
+  btn.textContent = active ? 'Show full page' : 'Highlight updates';
+  btn.classList.toggle('active', active);
+  btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+}
+
+function showAudience(key, el) {
+  var data = AUDIENCE_DATA[key];
+  if (!data) return;
+  document.getElementById('full-bleed').style.backgroundImage = "url('" + data.img + "')";
+  document.getElementById('full-bleed-heading').textContent = data.heading;
+  document.getElementById('full-bleed-text').innerHTML = data.text;
+  document.getElementById('photo-credit').innerHTML = data.credit;
+  document.querySelectorAll('.audience-tab').forEach(function(t) {
+    t.classList.remove('active');
+  });
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
