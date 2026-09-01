@@ -263,12 +263,17 @@
     slackX: 0, slackY: 0, // source pixels of slack available to drag
   };
 
-  // First-party proxy: /api/fetch.js, deployed alongside this page on Vercel.
+  // First-party proxy: api/fetch.js, deployed alongside this page on Vercel.
   // Tried first since it's the one PartySlate actually controls; the public
   // proxies below remain only as a fallback for environments where the
   // first-party endpoint isn't available (e.g. this file opened locally
-  // without Vercel, or running from a plain static host).
-  const FIRST_PARTY_PROXY = url => `/api/fetch?url=${encodeURIComponent(url)}`;
+  // without Vercel, or running from a plain static host — including a
+  // static-only host like GitHub Pages, where api/fetch.js can never
+  // execute regardless of path; it 404s there by design, not by bug).
+  // Relative path (no leading slash) so this resolves correctly whether
+  // this page is served from a domain root or a subpath (e.g. GitHub
+  // Pages project sites, which serve everything under /<repo-name>/).
+  const FIRST_PARTY_PROXY = url => `api/fetch?url=${encodeURIComponent(url)}`;
 
   // corsproxy.io is deliberately not in this list: as of 2026 it rejects all
   // anonymous/keyless requests outright (confirmed by hand — it now requires
